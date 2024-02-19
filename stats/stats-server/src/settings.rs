@@ -1,6 +1,6 @@
 use blockscout_service_launcher::{
     launcher::{
-        ConfigSettings, GrpcServerSettings, HttpServerSettings, MetricsSettings, ServerSettings,
+        CorsSettings, ConfigSettings, GrpcServerSettings, HttpServerSettings, MetricsSettings, ServerSettings,
     },
     tracing::{JaegerSettings, TracingSettings},
 };
@@ -8,6 +8,8 @@ use cron::Schedule;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DisplayFromStr};
 use std::{net::SocketAddr, path::PathBuf, str::FromStr};
+// use actix_web::http::header;
+
 
 #[serde_as]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -31,13 +33,23 @@ pub struct Settings {
 
 impl Default for Settings {
     fn default() -> Self {
+        let cors = CorsSettings{
+            allowed_origin: "http://localhost:3000".to_string(),
+            allowed_credentials: false, // Set to true or false based on your requirements
+            allowed_methods: "GET, POST".to_string(),  // Set allowed HTTP methods
+            block_on_origin_mismatch: false,
+            enabled: true, // Set to true or false based on your requirements
+            max_age: 3600, 
+
+        };
+
         Self {
             server: ServerSettings {
                 http: HttpServerSettings {
                     enabled: true,
                     addr: SocketAddr::from_str("0.0.0.0:8050").unwrap(),
                     max_body_size: 2 * 1024 * 1024, // 2 Mb - default Actix value
-                    cors: Default::default(),
+                    cors:cors,
                 },
                 grpc: GrpcServerSettings {
                     enabled: false,

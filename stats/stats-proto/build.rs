@@ -15,6 +15,7 @@ fn compile(
         .protoc_arg("--openapiv2_out=swagger")
         .protoc_arg("--openapiv2_opt")
         .protoc_arg("grpc_api_configuration=proto/api_config_http.yaml,output_format=yaml,allow_merge=true,merge_file_name=stats")
+        .protoc_arg("--experimental_allow_proto3_optional")
         .bytes(["."])
         .type_attribute(".", "#[actix_prost_macros::serde]");
 

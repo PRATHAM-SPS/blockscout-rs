@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+actix-cors = "0.6.4"
 stats = { path = "../stats" }
 stats-proto = { path = "../stats-proto" }
 async-trait = "0.1"
